@@ -1,0 +1,3 @@
+interface:
+  display_name: "Redteam Self-Audit"
+  short_description: "Attack your own app, prove the gaps, fix them, retest"

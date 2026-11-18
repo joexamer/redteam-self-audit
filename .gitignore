@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Red-team runtime evidence — never commit local findings or secrets
+.redteam/
+*.redteam.local
+
+# Demo fixture runtime state
+demo/*.db
+demo/*.log
+demo/*.pid
+demo/server.*

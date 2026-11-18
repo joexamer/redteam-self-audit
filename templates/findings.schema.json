@@ -1,0 +1,384 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://redteam-self-audit.local/schemas/findings.schema.json",
+  "title": "Redteam Self-Audit Findings",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "engagement_id",
+    "round",
+    "commit",
+    "build_hash",
+    "findings",
+    "chains",
+    "coverage",
+    "score",
+    "verdict"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "engagement_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "commit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "build_hash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "chains": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/chain"
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "minItems": 13,
+      "items": {
+        "$ref": "#/$defs/coverage"
+      }
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "verdict": {
+      "enum": [
+        "BLOCK",
+        "CONDITIONAL",
+        "PASS"
+      ]
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "class",
+        "status",
+        "severity",
+        "cvss",
+        "confidence",
+        "cwe",
+        "owasp_ref",
+        "wstg_ref",
+        "target",
+        "commit",
+        "build_hash",
+        "identity",
+        "request",
+        "response",
+        "evidence_paths",
+        "impact",
+        "chain_id",
+        "remediation",
+        "retest",
+        "timestamps"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^F-[0-9]{3,}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "class": {
+          "enum": [
+            "recon",
+            "authentication",
+            "session",
+            "authorization",
+            "injection",
+            "xss",
+            "ssrf",
+            "file",
+            "deserialization",
+            "business-logic",
+            "api",
+            "infrastructure",
+            "secrets"
+          ]
+        },
+        "status": {
+          "enum": [
+            "confirmed",
+            "suspected",
+            "fixed",
+            "retest-failed",
+            "risk-accepted"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "info"
+          ]
+        },
+        "cvss": {
+          "$ref": "#/$defs/cvss"
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "cwe": {
+          "type": "string",
+          "pattern": "^CWE-[0-9]+$"
+        },
+        "owasp_ref": {
+          "type": "string"
+        },
+        "wstg_ref": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "commit": {
+          "type": "string"
+        },
+        "build_hash": {
+          "type": "string"
+        },
+        "identity": {
+          "type": "string"
+        },
+        "request": {
+          "type": "string"
+        },
+        "response": {
+          "type": "string"
+        },
+        "evidence_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "chain_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "remediation": {
+          "type": "string"
+        },
+        "retest": {
+          "type": "string"
+        },
+        "timestamps": {
+          "$ref": "#/$defs/timestamps"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "confirmed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "confidence": {
+                "enum": [
+                  "high",
+                  "medium"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "cvss": {
+      "type": "object",
+      "required": [
+        "vector",
+        "score"
+      ],
+      "properties": {
+        "vector": {
+          "type": "string",
+          "pattern": "^CVSS:3\\.1/"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
+      },
+      "additionalProperties": false
+    },
+    "timestamps": {
+      "type": "object",
+      "required": [
+        "found_at"
+      ],
+      "properties": {
+        "found_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "fixed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "retested_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "chain": {
+      "type": "object",
+      "required": [
+        "chain_id",
+        "title",
+        "steps",
+        "combined_impact",
+        "severity",
+        "cvss"
+      ],
+      "properties": {
+        "chain_id": {
+          "type": "string",
+          "pattern": "^C-[0-9]{3,}$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "order",
+              "finding_id",
+              "action"
+            ],
+            "properties": {
+              "order": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "finding_id": {
+                "type": "string"
+              },
+              "action": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "combined_impact": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "info"
+          ]
+        },
+        "cvss": {
+          "$ref": "#/$defs/cvss"
+        }
+      },
+      "additionalProperties": true
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "class",
+        "status",
+        "tests_run"
+      ],
+      "properties": {
+        "class": {
+          "enum": [
+            "recon",
+            "authentication",
+            "session",
+            "authorization",
+            "injection",
+            "xss",
+            "ssrf",
+            "file",
+            "deserialization",
+            "business-logic",
+            "api",
+            "infrastructure",
+            "secrets"
+          ]
+        },
+        "status": {
+          "enum": [
+            "tested-pass",
+            "tested-fail",
+            "not-applicable",
+            "blocked"
+          ]
+        },
+        "tests_run": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

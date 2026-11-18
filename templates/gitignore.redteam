@@ -1,0 +1,5 @@
+# Append this to the target repository's .gitignore before the first Round.
+# Raw evidence is local-only and may contain credentials or PII.
+
+.redteam/
+*.redteam.local
