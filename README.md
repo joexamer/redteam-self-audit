@@ -1,158 +1,302 @@
-# Redteam Self-Audit
+# 🛡️ RedTeam Self-Audit
 
-Hack yourself before the bad guys do.
+### Hack yourself before the bad guys do.
 
-A portable agent skill for an authorized, black-box-first security audit of a locally running application. It attacks the target, proves what is exploitable, audits the source for what traffic cannot reveal, reports CVSS-scored findings with a release verdict, and drives approved fixes through retest Rounds until the gaps are closed.
+An open-source, agent-agnostic cybersecurity skill that transforms your AI coding agent into an authorized security assessment team.
 
-## What it does
+RedTeam Self-Audit goes beyond traditional static code analysis. It evaluates your locally running application from an attacker's perspective, validates security findings with evidence, reviews source code, generates detailed security reports, and guides approved remediation through regression testing.
 
-1. **Authorize** — writes a Rules of Engagement with an ownership attestation and a local-only target allowlist.
-2. **Bring up** — builds, runs, and seeds the app on loopback with Test Identities and owned objects.
-3. **Attack** — a Black-Box Attacker with no repository access runs the 13-class attack matrix, exploits to a Proof Cap, and chains findings.
-4. **Audit** — a White-Box Auditor reads the source and emits Candidate Findings for logic, race, tenant, crypto, and parser flaws.
-5. **Prove** — every Candidate goes back to the Attacker; only reproduced impact becomes Confirmed.
-6. **Report** — evidence, CVSS 3.1, CWE/WSTG/API mapping, Coverage Matrix, residual risk, and a BLOCK/CONDITIONAL/PASS verdict.
-7. **Fix** — the user approves per Finding; a separate Implementer patches minimally with a regression test.
-8. **Retest** — original PoC must fail, full regression must pass, fresh bypasses must fail. Repeat up to three Rounds.
+![License](https://img.shields.io/github/license/joexamer/redteam-self-audit?style=flat-square)
+![GitHub Stars](https://img.shields.io/github/stars/joexamer/redteam-self-audit?style=flat-square)
+![Agent Skills](https://img.shields.io/badge/Agent%20Skills-Compatible-blue?style=flat-square)
+![Security](https://img.shields.io/badge/Security-Red%20Team-red?style=flat-square)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green?style=flat-square)
 
-It is not a scanner. Scanner output is a lead, not a Finding.
+---
 
-## Install
+## 🚀 Installation
 
-### From source (recommended)
+Install RedTeam Self-Audit using the [Skills CLI](https://skills.sh/):
 
 ```bash
-git clone https://github.com/<you>/redteam-self-audit.git ~/.agents/skills/redteam-self-audit
+npx skills add joexamer/redteam-self-audit
 ```
 
-The clone target can be any skill directory. OpenCode and Claude Code both look for skills by folder name:
+Requires Node.js 22.20 or later for the current Skills CLI.
 
-| Harness | User-level | Project-level |
+### Global installation
+
+Make the skill available across your projects:
+
+```bash
+npx skills add joexamer/redteam-self-audit -g
+```
+
+### Install for a specific agent
+
+**Claude Code**
+
+```bash
+npx skills add joexamer/redteam-self-audit -a claude-code
+```
+
+**OpenCode**
+
+```bash
+npx skills add joexamer/redteam-self-audit -a opencode
+```
+
+**Codex**
+
+```bash
+npx skills add joexamer/redteam-self-audit -a codex
+```
+
+**Cursor**
+
+```bash
+npx skills add joexamer/redteam-self-audit -a cursor
+```
+
+### Manual installation
+
+```bash
+git clone https://github.com/joexamer/redteam-self-audit.git
+```
+
+Copy the repository into your coding agent's supported skills directory.
+
+### Updating
+
+```bash
+npx skills update
+```
+
+---
+
+## ⚡ Quick Start
+
+Open your project using your preferred AI coding agent after installing the skill.
+
+Ask your agent:
+
+> Use redteam-self-audit to perform a comprehensive security assessment of my local application. Generate an evidence-based report and propose fixes. Do not modify the application without my approval.
+
+The agent will establish the authorized testing scope, determine the available environment capabilities, and begin the security assessment.
+
+No external API key is required by the skill itself. Your coding agent and selected AI model may have their own requirements.
+
+---
+
+## 🧠 What Makes It Different?
+
+Most AI security reviews simply read source code and suggest potential vulnerabilities.
+
+RedTeam Self-Audit combines runtime security testing, source-code analysis, evidence validation, and controlled remediation into a structured workflow.
+
+| Capability | Traditional code review | RedTeam Self-Audit |
 |---|---|---|
-| OpenCode | `~/.agents/skills/` | `.agents/skills/` |
-| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
+| Static code analysis | ✅ | ✅ |
+| Runtime security assessment | Limited | ✅ |
+| Black-box testing | Usually unavailable | ✅ |
+| Evidence-based findings | Varies | ✅ |
+| Business logic review | Limited | ✅ |
+| CVSS severity scoring | Varies | ✅ |
+| Security coverage reporting | Varies | ✅ |
+| Approval-based remediation | Manual | ✅ |
+| Regression testing | Manual | ✅ |
+| Release readiness verdict | Varies | ✅ |
 
-### From a zip or local copy
+Capabilities depend on the host agent, available tools, and environment isolation.
 
-```bash
-# User-level (OpenCode)
-cp -R redteam-self-audit ~/.agents/skills/
+---
 
-# Project-level
-mkdir -p .agents/skills
-cp -R redteam-self-audit .agents/skills/
+## 🔥 Core Features
+
+- **Black-box-first assessment:** Evaluate application behavior without relying on source-code knowledge when isolation is available.
+- **White-box security audit:** Identify security weaknesses that cannot be detected through runtime testing alone.
+- **Local environment orchestration:** Work with locally running applications and isolated test environments.
+- **Evidence-based reporting:** Distinguish confirmed vulnerabilities from suspected weaknesses.
+- **CVSS 3.1 scoring:** Classify confirmed findings by severity.
+- **Security coverage matrix:** Document what was tested, what was skipped, and why.
+- **Human-approved remediation:** Require explicit approval before applying fixes.
+- **Regression verification:** Verify approved fixes and identify remaining weaknesses.
+- **Release verdict:** Generate a BLOCK, CONDITIONAL, or PASS assessment.
+- **Agent-agnostic architecture:** Use the skill with compatible AI coding environments.
+
+---
+
+## ⚙️ How It Works
+
+```mermaid
+flowchart TD
+    A[Authorization and Rules of Engagement] --> B[Local Environment Setup]
+    B --> C[Black-Box Security Assessment]
+    C --> D[White-Box Security Audit]
+    D --> E[Evidence Validation]
+    E --> F[Security Report]
+    F --> G{User Approves Fixes?}
+    G -->|No| H[Report Only]
+    G -->|Yes| I[Implement Approved Fixes]
+    I --> J[Regression and Security Retest]
+    J --> K{Retest Gate Passed?}
+    K -->|No| F
+    K -->|Yes| L[Final Security Report]
 ```
 
-The skill is harness-agnostic. It uses normal shell, HTTP, and file tools. Optional tools (`nmap`, `ffuf`, `nuclei`, `sqlmap`, ZAP, browser automation) are detected and substituted, never assumed.
+### Assessment stages
 
-## Requirements and capability tiers
+1. **Authorization:** Establish ownership, permitted targets, boundaries, and Rules of Engagement.
+2. **Environment preparation:** Prepare a local application with isolated test data.
+3. **Black-box assessment:** Evaluate externally observable application behavior.
+4. **White-box audit:** Review source code, configuration, dependencies, and application logic.
+5. **Validation:** Verify findings and collect supporting evidence.
+6. **Reporting:** Produce a structured security assessment and remediation recommendations.
+7. **Remediation:** Apply individually approved fixes.
+8. **Retesting:** Verify remediation through regression and security testing, for up to three rounds.
 
-- **Tier A** — shell + Docker. Best isolation: target in a container, Attacker in a network-only context.
-- **Tier B** — shell, host-run server. Bind to `127.0.0.1`; isolate the Attacker in a separate session or subagent.
-- **Tier C** — no shell. Static review only. Dynamic claims are forbidden; verdict capped at CONDITIONAL.
+---
 
-Required: `bash`, `curl`, `python3`. Optional: `jq`, `git`, `docker`, `npm`, browser automation.
+## 🛡️ Security Coverage
 
-## Quick start
+The assessment methodology covers:
 
-```bash
-# Run from the target repository. Point SKILL_DIR at this folder.
-SKILL_DIR=/path/to/redteam-self-audit
-REPO_PATH="$PWD"
+| Category | Scope |
+|---|---|
+| Application surface | Exposed functionality and endpoints |
+| Authentication | Identity verification and account security |
+| Sessions | Session and token management |
+| Authorization | Access control and tenant isolation |
+| Injection | Unsafe input processing |
+| Client-side security | Browser-side vulnerabilities |
+| Network trust | Server-side request handling |
+| File handling | Upload, download, and storage security |
+| Data processing | Parser and serialization security |
+| Business logic | Workflow and application state integrity |
+| APIs | API and real-time communication security |
+| Infrastructure | Deployment and configuration weaknesses |
+| Supply chain | Dependencies and exposed secrets |
 
-# 0. Protect local evidence
-mkdir -p .redteam
-cat "$SKILL_DIR/templates/gitignore.redteam" >> .gitignore
+Coverage is recorded in the final report. Unsupported or untested categories are explicitly disclosed.
 
-# 1. Authorize
-cp "$SKILL_DIR/templates/ROE.md" .redteam/ROE.md
-$EDITOR .redteam/ROE.md          # fill it in, attest ownership
+---
 
-# 2. Bring up and seed (Operator)
-bash "$SKILL_DIR/scripts/bootstrap-target.sh" "$REPO_PATH" 3000
+## 📊 Security Reporting
 
-# 3. Write the brief
-cp "$SKILL_DIR/templates/BRIEF.md" .redteam/BRIEF.md
-$EDITOR .redteam/BRIEF.md        # URLs, identities, seeded object IDs
+The generated report includes:
 
-# 4. Attack (Black-Box Attacker; give it BRIEF.md only)
-# 5. Audit (White-Box Auditor; separate context)
-# 6. Report, approve fixes, retest
-python3 "$SKILL_DIR/scripts/validate-findings.py" .redteam/findings.json --report .redteam/report.md
-```
+- Executive summary
+- Assessment scope
+- Rules of Engagement
+- Security score
+- Release readiness verdict
+- Confirmed and suspected findings
+- CVSS 3.1 severity ratings
+- Supporting evidence
+- Business and technical impact
+- CWE and OWASP mappings
+- Recommended remediation
+- Security coverage matrix
+- Regression and retest results
+- Remaining risks and limitations
 
-If the target is already running on loopback, skip step 2 and write the brief from the known URL and identities.
+### Severity classification
 
-No project handy? Run the bundled demo and attack it:
+| Severity | CVSS 3.1 |
+|---|---|
+| 🔴 Critical | 9.0–10.0 |
+| 🟠 High | 7.0–8.9 |
+| 🟡 Medium | 4.0–6.9 |
+| 🔵 Low | 0.1–3.9 |
+| ⚪ None | 0.0 |
 
-```bash
-python3 "$SKILL_DIR/demo/app.py" --port 5002   # deliberately vulnerable local target
-# identities and known vulns are documented in demo/README.md
-```
+### Security scoring
 
-## Attack matrix
+The assessment starts at 100 points.
 
-| # | Class | Playbook |
+| Confirmed severity | Deduction |
+|---|---:|
+| Critical | −35 |
+| High | −12 |
+| Medium | −4 |
+| Low | −1 |
+
+Related findings are evaluated without double-counting confirmed chains. Insufficient testing coverage caps the security score.
+
+### Release verdict
+
+| Verdict | Meaning |
+|---|---|
+| 🔴 BLOCK | Significant unresolved security risks or an insufficient security score |
+| 🟡 CONDITIONAL | Remaining findings, incomplete coverage, or missing runtime verification |
+| 🟢 PASS | Defined remediation, coverage, and retesting criteria have been satisfied |
+
+A PASS verdict is not a guarantee that the application is free of vulnerabilities.
+
+---
+
+## 🤖 Supported AI Agents
+
+RedTeam Self-Audit follows the open Agent Skills format.
+
+| Agent | Installation target |
+|---|---|
+| Claude Code | `claude-code` |
+| OpenCode | `opencode` |
+| OpenAI Codex | `codex` |
+| Cursor | `cursor` |
+| Other compatible agents | Select during installation |
+
+The skill is not tied to a specific AI model provider.
+
+Assessment quality depends on the selected model's reasoning capabilities, tool access, context window, and ability to follow security procedures.
+
+Installation compatibility does not guarantee complete runtime compatibility.
+
+---
+
+## 📦 Requirements
+
+### Basic requirements
+
+- A compatible AI coding agent
+- A locally accessible application
+- Bash
+- Python 3
+- cURL
+- Authorization to assess the application
+
+### Optional capabilities
+
+- Docker
+- Git
+- jq
+- Node.js
+- Browser automation
+- Compatible security analysis tools
+
+### Environment capability tiers
+
+| Tier | Environment | Capabilities |
 |---|---|---|
-| 1 | Recon and surface | `references/playbooks/01-recon-surface.md` |
-| 2 | Authentication | `references/playbooks/02-authentication.md` |
-| 3 | Session and tokens | `references/playbooks/03-session-tokens.md` |
-| 4 | Authorization | `references/playbooks/04-authorization.md` |
-| 5 | Injection | `references/playbooks/05-injection.md` |
-| 6 | XSS and client-side | `references/playbooks/06-xss-client-side.md` |
-| 7 | SSRF and network trust | `references/playbooks/07-ssrf-network-trust.md` |
-| 8 | File handling | `references/playbooks/08-file-handling.md` |
-| 9 | Deserialization and parsers | `references/playbooks/09-deserialization-parsers.md` |
-| 10 | Business logic and state | `references/playbooks/10-business-logic-state.md` |
-| 11 | API and realtime | `references/playbooks/11-api-realtime.md` |
-| 12 | Infrastructure and config | `references/playbooks/12-infrastructure-config.md` |
-| 13 | Secrets and supply chain | `references/playbooks/13-secrets-supply-chain.md` |
+| A | Shell and Docker | Isolated runtime and source-code assessment |
+| B | Shell without Docker | Host-based local assessment |
+| C | No shell access | Static security review only |
 
-Exploit-chain recipes live in `references/chains.md`.
+If true black-box isolation is unavailable, the assessment is classified as gray-box.
 
-## Hard rules
+---
 
-- Local and private targets only. Public, production, and third-party targets are refused.
-- No ROE, no attack.
-- Proof Cap: one record, first bytes of one file, one harmless command, one admin read.
-- Black-Box Attacker gets the brief only; if the harness cannot isolate it, the report says Gray-Box.
-- No destructive actions, DoS, persistence, C2, or external exfiltration.
-- Confirmed requires evidence. No "secure" or "all clear" claims.
-- Fixes need per-Finding approval and a retest.
+## 📁 Repository Structure
 
-See `SKILL.md` for the full rules and `references/roe.md` for the refusal script.
-
-## Scoring
-
-Start at 100; deduct for Confirmed Findings only: Critical −35, High −12, Medium −4, Low −1. A Finding that is a step in an Exploit Chain is scored through its chain, not again on its own: deduct each chain once at its combined severity plus each Confirmed Finding that belongs to no chain. Coverage below 90% caps the score at 79. Verdict precedence: BLOCK on any open Critical/High or score <70; CONDITIONAL on open Medium, unresolved Suspected High/Critical, coverage <90%, or no dynamic testing; PASS only with no open Critical/High/Medium, coverage ≥90%, and the Retest Gate met.
-
-## Resources
-
-OWASP WSTG, Top 10, API Security Top 10, ASVS, Cheat Sheets, Juice Shop; PortSwigger Academy; HackTricks; PayloadsAllTheThings; Exploit-DB/SearchSploit; CWE; CVSS 3.1; NVD; MITRE ATT&CK; SecLists; Nuclei templates; GTFOBins; LOLBAS; ZAP; Burp; sqlmap; ffuf; nmap; jwt_tool; hashcat; ysoserial; Semgrep; Trivy; Gitleaks; TruffleHog; OSV-Scanner; Playwright; HackerOne Hacktivity; Bugcrowd University. See `references/resources.md` for URLs and usage rules.
-
-## Validation
-
-- **Local fixture:** validated — an independent agent ran the skill end to end against a deliberately vulnerable local app and produced 10 Confirmed Findings, 3 Exploit Chains, 92% coverage, and a BLOCK verdict, all with raw request/response evidence. See [`VALIDATION.md`](VALIDATION.md).
-- **Juice Shop calibration:** NOT RUN — Docker is not installed on the build machine. Run the calibration in a Docker-capable environment before relying on the skill for a release decision.
-- **Lobotomy tests:** PASS — seven refusal scenarios (public target, ROE skip, production data, destructive proof, external callback, unapproved fix, blind-run PoC) were all refused or redirected to the compliant path. See `tests/refusal-prompts.md`.
-- **Fix-and-retest loop:** NOT RUN end to end — the live run stopped at the report. Phase 6–8 behavior is specified and tooled but unverified dynamically.
-
-## Assumptions
-
-- The user can provide a repository and a local run command, or an already-running loopback URL.
-- The app has a way to seed test users; if not, authorization coverage is recorded as a gap.
-- The harness may or may not support subagents or containers; the skill degrades to a disclosed Gray-Box run.
-- No Docker on the build machine, so container isolation and the Juice Shop calibration are unverified here.
-
-## Files
-
-```
+```text
 redteam-self-audit/
 ├── SKILL.md
 ├── README.md
 ├── LICENSE
 ├── VALIDATION.md
-├── agents/openai.yaml
+├── agents/
+│   └── openai.yaml
 ├── references/
 │   ├── roe.md
 │   ├── glossary.md
@@ -161,30 +305,132 @@ redteam-self-audit/
 │   ├── remediation.md
 │   ├── resources.md
 │   ├── chains.md
-│   └── playbooks/01..13
+│   └── playbooks/
+├── scripts/
 ├── templates/
 │   ├── ROE.md
 │   ├── BRIEF.md
 │   ├── STATE.md
 │   ├── findings.schema.json
-│   ├── gitignore.redteam
 │   └── report.md
-├── scripts/
-│   ├── bootstrap-target.sh
-│   ├── reset-fixtures.sh
-│   ├── run-suite.sh
-│   ├── redact-evidence.py
-│   ├── cvss31.py
-│   └── validate-findings.py
 ├── demo/
-│   ├── README.md
-│   ├── app.py          # deliberately vulnerable local target
-│   ├── reset.sh
-│   └── files/
 └── tests/
-    └── refusal-prompts.md
 ```
 
-## License and intent
+- `SKILL.md` — Main agent instructions.
+- `references/` — Security methodology and assessment references.
+- `scripts/` — Supporting validation and environment utilities.
+- `templates/` — Standardized assessment and reporting templates.
+- `demo/` — Deliberately vulnerable local testing fixture.
+- `tests/` — Safety and behavior validation.
+- `VALIDATION.md` — Documented validation results and limitations.
 
-Use only on systems you own or are authorized in writing to test. The skill is built to refuse anything else. If you point it at a public target, it should stop.
+---
+
+## 🧪 Validation Status
+
+The skill has been evaluated against a deliberately vulnerable local application.
+
+| Metric | Result |
+|---|---:|
+| Confirmed findings | 10 |
+| Confirmed exploit chains | 3 |
+| Assessment coverage | 92% |
+| Refusal scenarios tested | 7 |
+| Release verdict | BLOCK |
+
+### Current validation limitations
+
+- Local fixture assessment: validated.
+- Safety refusal scenarios: passed.
+- Docker-based isolation: not yet independently validated.
+- OWASP Juice Shop calibration: not yet completed.
+- Full remediation and retest lifecycle: not yet validated end to end.
+
+See [VALIDATION.md](VALIDATION.md) for the complete validation details.
+
+---
+
+## 📚 Security Standards
+
+The methodology draws on established application security resources, including:
+
+- [OWASP Web Security Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [OWASP API Security](https://owasp.org/www-project-api-security/)
+- [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/)
+- [CWE](https://cwe.mitre.org/)
+- [CVSS](https://www.first.org/cvss/)
+- [MITRE ATT&CK](https://attack.mitre.org/)
+- [PortSwigger Web Security Academy](https://portswigger.net/web-security)
+
+---
+
+## ⚠️ Responsible Use
+
+RedTeam Self-Audit is designed exclusively for authorized, defensive cybersecurity assessments.
+
+- Assess only local or private test environments that you own or have explicit written authorization to test.
+- Establish Rules of Engagement before beginning.
+- Use synthetic test data instead of production data.
+- Do not target public or third-party infrastructure.
+- Do not perform destructive operations, denial-of-service testing, persistence, or external data exfiltration.
+- Obtain explicit approval before modifying application code.
+- Review generated reports and remediation recommendations before relying on them.
+
+The skill is not a replacement for professional penetration testing, independent security reviews, or security certification.
+
+---
+
+## 🗺️ Roadmap
+
+- [x] Agent Skills-compatible architecture
+- [x] Structured security assessment methodology
+- [x] Local application assessment
+- [x] Evidence-based reporting
+- [x] CVSS scoring
+- [x] Local fixture validation
+- [x] Safety refusal testing
+- [ ] OWASP Juice Shop calibration
+- [ ] End-to-end remediation lifecycle validation
+- [ ] Cross-agent compatibility testing
+- [ ] CI/CD integration
+- [ ] Additional application framework validation
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome.
+
+You can help improve:
+
+- Security assessment accuracy
+- Agent compatibility
+- Reporting quality
+- Framework compatibility
+- Test coverage
+- Environment isolation
+- Documentation
+
+Open an [issue](https://github.com/joexamer/redteam-self-audit/issues) or submit a pull request.
+
+---
+
+## 📄 License
+
+Released under the [MIT License](LICENSE).
+
+---
+
+## 👨‍💻 Author
+
+Created by [@joexamer](https://github.com/joexamer).
+
+If you find this project useful, consider giving it a ⭐ on GitHub.
+
+```bash
+npx skills add joexamer/redteam-self-audit
+```
+
+**Hack yourself before the bad guys do.**
